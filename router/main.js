@@ -36,28 +36,31 @@ router.get("/addTodo/:todo",(req,res)=>{
         dbo.collection("todos").insert({todo:data})
         .then(obj=>{
             db.close()
+            console.log("done bro")
             res.status(200).json({message:"added successfully"})
         })
         .catch(err=>{
             db.close()
+            console.log("error bro")
 
             res.status(400).json({error:err})
         })
     }else{
+        console.log("error bro")
         res.status(400).json({error:err})
     }
     })
 })
 
 //add to dones
-router.get("/addDone/:done/:id",(req,res)=>{
+router.get("/addDone/:done",(req,res)=>{
     let data=req.params.done;
     mongoClient.connect("mongodb://localhost:27017/",{useNewUrlParser:true},(err,db)=>{
     if(!err){
         let dbo=db.db('tododb');
-        dbo.collection("dones").insert({todo:data})
+        dbo.collection("dones").insertOne({todo:data})
         .then(obj=>{
-            dbo.collection("todos").deleteOne({_id:req.params.id})
+            dbo.collection("todos").deleteOne({todo:data})
             .then(obj=>{
                 db.close()
             res.status(200).json({message:"added to dones successfully"})
@@ -101,7 +104,7 @@ router.get("/removeDone/:done",(req,res)=>{
     mongoClient.connect("mongodb://localhost:27017/",{useNewUrlParser:true},(err,db)=>{
     if(!err){
         let dbo=db.db('tododb');
-            dbo.collection("dones").remove({done:req.params.done})
+            dbo.collection("dones").deleteOne({todo:req.params.done})
             .then(obj=>{
                 db.close()
             res.status(200).json({message:"removed from dones successfully"})
