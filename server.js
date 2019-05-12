@@ -1,18 +1,9 @@
 const express = require("express");
-const mongoose = require("mongoose");
+const  mongoClient = require("mongodb").MongoClient
 const app =express()
 //route specification
 const bodyParser = require('body-parser');
 const {mongoURI} = require("./config/config");
-
-mongoose
-  .connect(mongoURI,{ useNewUrlParser: true })
-  .then(() => console.log('mongodb connected'))
-  .catch(err => {
-      console.log(err)
-      console.log("rooe")
-    });
-
 app.get("/",(req,res)=>{
     res.status(200).json({message:"working"})
 })
